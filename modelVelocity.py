@@ -71,8 +71,8 @@ class ModelVelocity(object):
 
         #nsamps = 2**6 + 1
         nsamps = 2**7 + 1
-        dr = 5./(nsamps-1)
-        rs = np.arange(0., 5.+0.1*dr, dr)
+        dr = 10./(nsamps-1)
+        rs = np.arange(0., 10.+0.1*dr, dr)
         return romb(func(rs), dx=dr)
     
     def Iv_nosmearing(self, v):
