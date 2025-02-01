@@ -99,11 +99,28 @@ class MCMC(object):
         return 
     
     def best_fit(self):
-        best_fit = np.median(self.flat_samples[:,~self.ifix], axis=0)
-        x_use = np.copy(self.x_init)
-        x_use[~self.ifix] = best_fit
-        lp_bestfit = self.log_prob(x_use, self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix)
-        return x_use, lp_bestfit
+
+        #Get the percentiles for the parameters that vary. 
+        pps = np.percentile(self.flat_samples[:,~self.ifix], [16, 50, 84], axis=0)
+
+        #Best fit is the median, and errors are 1sigma.
+        best_fit = np.copy(self.x_init)
+        best_fit[~self.ifix] = pps[1]
+
+        err_low = np.zeros(best_fit.shape)
+        err_hig = np.zeros(best_fit.shape)
+        err_low[~self.ifix] = best_fit[~self.ifix]-pps[0]
+        err_hig[~self.ifix] = pps[2]-best_fit[~self.ifix]
+
+        lp_bestfit = self.log_prob(best_fit, self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix)
+
+        return best_fit, err_low, err_hig, lp_bestfit
+
+        # best_fit = np.median(self.flat_samples[:,~self.ifix], axis=0)
+        # x_use = np.copy(self.x_init)
+        # x_use[~self.ifix] = best_fit
+        # lp_bestfit = self.log_prob(x_use, self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix)
+        # return x_use, lp_bestfit
     
     def plot_bestfit(self):
 
