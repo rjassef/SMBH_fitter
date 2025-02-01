@@ -3,10 +3,10 @@ from modelVelocity import ModelVelocity
 
 def log_prob(x, modelv, sigma_obs, sigma_obs_err, x_min, x_max, x_init, ifix):
 
-    x_use = np.copy(x_init)
-    x_use[~ifix] = x
+    x_use = np.array(x)
+    x_use[ifix] = x_init[ifix]
 
-    if np.sum(x<x_min[~ifix])>0 or np.sum(x>x_max[~ifix])>0:
+    if np.sum(x_use[~ifix]<x_min[~ifix])>0 or np.sum(x_use[~ifix]>x_max[~ifix])>0:
        return -np.inf
 
     n, log_Mbulge, re_bulge, log_Mbh = x_use

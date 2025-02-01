@@ -12,7 +12,7 @@ class MCMC(object):
         self.x_min = x_min
         self.x_max = x_max
         self.nwalkers = nwalkers
-        self.ndim = len(x_init[~ifix])
+        self.ndim = len(x_init)
         self.modelv = modelv
         self.log_prob = log_prob
         self.sigma_obs = sigma_obs
@@ -24,7 +24,7 @@ class MCMC(object):
         if ifix is None:
             self.ifix = np.zeros(len(x_init), np.bool)
 
-        self.x0 = x_init[~ifix] * (1 + spread_factor*np.random.randn(nwalkers, self.ndim))
+        self.x0 = x_init * (1 + spread_factor*np.random.randn(nwalkers, self.ndim))
 
         #self.runMCMC()
 
@@ -40,34 +40,41 @@ class MCMC(object):
             self.sampler.run_mcmc(state, nsamp, progress=True)
 
         self.flat_samples = self.sampler.get_chain(flat=True)
+        self.flat_samples_nolog = np.copy(self.flat_samples)
+        self.flat_samples_nolog[:,1] = 10.**self.flat_samples[:,1]
+        self.flat_samples_nolog[:,3] = 10.**self.flat_samples[:,3]
 
     def save_flat_samples(self, fname):
         np.savetxt(fname, self.flat_samples)
         return 
     
     def load_flat_samples(self, fname):
-        self.flat_samples = np.loadtxt(fname) 
+        self.flat_samples = np.loadtxt(fname)
+        self.flat_samples_nolog = np.copy(self.flat_samples)
+        self.flat_samples_nolog[:,1] = 10.**self.flat_samples[:,1]
+        self.flat_samples_nolog[:,3] = 10.**self.flat_samples[:,3]   
         return    
 
     def plotConvergence(self):
 
-        fig, axes = plt.subplots(self.ndim, figsize=(10, np.ceil(7*self.ndim/len(self.x_init))), sharex=True)
+        n_plots = np.sum(~self.ifix)
+        fig, axes = plt.subplots(n_plots, figsize=(10, np.ceil(7*n_plots/self.ndim)), sharex=True)
         samples = self.sampler.get_chain()
         i = 0
-        for ii in range(len(self.x_init)):
+        for ii in range(self.ndim):
             if self.ifix[ii]:
                 continue
-            if self.ndim>1:
+            if n_plots>1:
                 ax = axes[i]
             else:
                 ax = axes
-            ax.plot(samples[:, :, i], "k", alpha=0.3)
+            ax.plot(samples[:, :, ii], "k", alpha=0.3)
             ax.set_xlim(0, len(samples))
             ax.set_ylabel(self.labels[ii])
             ax.yaxis.set_label_coords(-0.1, 0.5)
             i += 1
 
-        if self.ndim>1:
+        if n_plots>1:
             axes[-1].set_xlabel("step number")
         else:
             axes.set_xlabel("step number")
@@ -75,7 +82,7 @@ class MCMC(object):
 
         return
     
-    def corner_plot(self):
+    def corner_plot(self, keep_log=True):
 
         labels_use = []
         for i in range(len(self.labels)):
@@ -83,16 +90,18 @@ class MCMC(object):
                 labels_use.append(self.labels[i])
         
         flat_samples_use = self.flat_samples
+        if not keep_log:
+            flat_samples_use = self.flat_samples_nolog
 
         fig = corner.corner(
-            flat_samples_use, labels=labels_use
+            flat_samples_use[:,~self.ifix], labels=labels_use
         );
         return 
     
     def best_fit(self):
 
         #Get the percentiles for the parameters that vary. 
-        pps = np.percentile(self.flat_samples, [16, 50, 84], axis=0)
+        pps = np.percentile(self.flat_samples[:,~self.ifix], [16, 50, 84], axis=0)
 
         #Best fit is the median, and errors are 1sigma.
         best_fit = np.copy(self.x_init)
@@ -103,7 +112,7 @@ class MCMC(object):
         err_low[~self.ifix] = best_fit[~self.ifix]-pps[0]
         err_hig[~self.ifix] = pps[2]-best_fit[~self.ifix]
 
-        lp_bestfit = self.log_prob(pps[1], self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix)
+        lp_bestfit = self.log_prob(best_fit, self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix)
 
         return best_fit, err_low, err_hig, lp_bestfit
 
