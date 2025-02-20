@@ -17,9 +17,9 @@ class ReadData(object):
         self.sigma_obs = data[:,3]
         self.sigma_obs_err = data[:,4]
 
-        #If this option is on, then we use the mean of the major and minor axis FWHM of the beam. Otherwise, we use the major axis FWHM, which is what we have in the data.dat file. 
+        #If this option is on, then we use the GEOMETRIC mean of the major and minor axis FWHM of the beam. Otherwise, we use the major axis FWHM, which is what we have in the data.dat file. 
         if use_average_beam_axes:
-            self.FWHM_Bs_ang = np.where(self.FWHM_Bs_ang==0.089, 0.5*(0.089+0.053), 0.5*(0.13+0.09))
+            self.FWHM_Bs_ang = np.where(self.FWHM_Bs_ang==0.089, (0.089*0.053)**0.5, (0.13*0.09)**0.5)
         #If this option is on, we test using the minor axis instead for the beam convolution. 
         elif use_minor_axis:
             self.FWHM_Bs_ang = np.where(self.FWHM_Bs_ang==0.089, 0.053, 0.09)
