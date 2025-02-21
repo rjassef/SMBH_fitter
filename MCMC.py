@@ -6,7 +6,7 @@ import corner
 
 class MCMC(object):
 
-    def __init__(self, x_init, x_min, x_max, modelv, log_prob, sigma_obs, sigma_obs_err, ifix=None, nwalkers=32, spread_factor=1e-5):
+    def __init__(self, x_init, x_min, x_max, modelv, log_prob, sigma_obs, sigma_obs_err, ifix=None, nwalkers=32, spread_factor=1e-5, flatchain_folder="flatchains"):
 
         self.x_init = x_init
         self.x_min = x_min
@@ -17,8 +17,14 @@ class MCMC(object):
         self.log_prob = log_prob
         self.sigma_obs = sigma_obs
         self.sigma_obs_err = sigma_obs_err
+        self.flatchain_folder = flatchain_folder
 
-        self.labels = ["n", "log Mbulge", "Re bulge", "log Mbh"]
+        self.labels = [
+            "Sersic Index n", 
+            r"$\log M_{\rm Host}/M_{\odot}$", 
+            r"$R_{\rm eff}/{\rm kpc}$", 
+            r"$\log M_{\rm BH}/M_{\odot}$"
+        ]
 
         self.ifix = ifix
         if ifix is None:
@@ -30,7 +36,7 @@ class MCMC(object):
 
         return
     
-    def runMCMC(self, nproc=8,  nburn=500, nsamp=2000):
+    def runMCMC(self, nproc=8,  nburn=1000, nsamp=5000):
 
         with get_context("fork").Pool(nproc) as pool:
             self.sampler = emcee.EnsembleSampler(self.nwalkers, self.ndim, self.log_prob, args=[self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix],pool=pool)
@@ -42,11 +48,11 @@ class MCMC(object):
         self.flat_samples = self.sampler.get_chain(flat=True)
 
     def save_flat_samples(self, fname):
-        np.savetxt(fname, self.flat_samples)
+        np.savetxt(self.flatchain_folder+"/"+fname, self.flat_samples)
         return 
     
     def load_flat_samples(self, fname):
-        self.flat_samples = np.loadtxt(fname) 
+        self.flat_samples = np.loadtxt(self.flatchain_folder+"/"+fname) 
         return    
 
     def plotConvergence(self):
@@ -85,7 +91,7 @@ class MCMC(object):
         flat_samples_use = self.flat_samples
 
         fig = corner.corner(
-            flat_samples_use, labels=labels_use
+            flat_samples_use, labels=labels_use, label_kwargs={"fontsize": 12}, quantiles=[0.16, 0.5, 0.84], show_titles=True, title_kwargs={"fontsize": 12}
         );
         return 
     
@@ -115,14 +121,19 @@ class MCMC(object):
     
     def plot_bestfit(self):
 
-        fig, ax = plt.subplots(1, figsize=(10,8))
+        fig, ax = plt.subplots(1, figsize=(5,4))
 
         ne, log_Mbulge, re_bulge, log_Mbh = self.best_fit()[0]
         self.modelv.set_params(ne, 10.**log_Mbulge, re_bulge, 10.**log_Mbh)
 
-        r_mean = 0.5*(self.modelv.r_ins+self.modelv.r_outs)
-        ax.errorbar(r_mean, self.sigma_obs, yerr=self.sigma_obs_err, fmt='bo', label='Observed')
-        ax.plot(r_mean, self.modelv.model_sigmas(), 'ro', label='Best-fit Model')
+        chi2 = self.best_fit()[-1] * -2
+        chi2_nu = chi2/(len(self.sigma_obs)-(4-np.sum(self.ifix)))
+
+        ax.set_title(r"Goodness of fit:   $\chi^2$ = {:.2f},   $\chi^2/{{\rm dof}}$ = {:.2f}".format(chi2, chi2_nu), transform=ax.transAxes)
+
+        r_mean = 0.5*(self.modelv.data.r_ins+self.modelv.data.r_outs)
+        ax.errorbar(r_mean, self.sigma_obs, yerr=self.sigma_obs_err, marker='o', color='xkcd:gray', linestyle='none', label='Observed')
+        ax.plot(r_mean, self.modelv.model_sigmas(), 'mo', label='Best-fit Model', markerfacecolor="none")
         ax.legend()
         ax.set_xlabel("Distance from Center (kpc)")
         ax.set_ylabel("Velocity Dispersion (km/s)")

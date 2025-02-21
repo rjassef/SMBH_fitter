@@ -1,8 +1,8 @@
-central_rings  R_inner R_outer beam_size  sigma   sigma_err
-central_U      0.      0.045   0.089      300      3
-ring1_U        0.045   0.074   0.089      245      21
-ring1_N        0.074   0.105   0.13       197      19
-ring2_N        0.105   0.136   0.13       184.5    18
-ring3_N        0.136   0.168   0.13       202      18
-ring4_N        0.168   0.2     0.13       200      19
-ring5_N        0.2     0.23    0.13       186      19
+central_rings  R_inner R_outer averge_beam_size  sigma   sigma_err average_R_inner average_R_outer
+central_U      0.      0.045   0.0687     300      3        1.e-32             0.0343
+ring1_U        0.045   0.074   0.0687     245      21       0.0343             0.0572
+ring1_N        0.074   0.105   0.108      197      19        0.064             0.092
+ring2_N        0.105   0.136   0.108      184.5    18        0.092             0.119
+ring3_N        0.136   0.168   0.108      202      18        0.119             0.146
+ring4_N        0.168   0.2     0.108      200      19        0.146             0.173
+ring5_N        0.2     0.23    0.108      186      19        0.173             0.201

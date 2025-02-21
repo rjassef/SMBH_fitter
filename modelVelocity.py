@@ -9,17 +9,15 @@ from scipy.optimize import curve_fit
 #All distances are in kpc, all masses in Msun units. 
 class ModelVelocity(object):
 
-    def __init__(self, sigma_Bs, r_ins, r_outs):
+    def __init__(self, data):
 
         #Save the input parameters.
-        self.sigma_Bs = sigma_Bs
-        self.r_ins = r_ins
-        self.r_outs = r_outs
+        self.data = data
         
         #Start the the f and g function objects.
-        self.f_funcs = [None]*len(r_ins)
-        for i in range(len(r_ins)):
-            self.f_funcs[i] = Ffunc(sigma_Bs[i], r_ins[i], r_outs[i])
+        self.f_funcs = [None]*len(data.r_ins)
+        for i in range(len(data.r_ins)):
+            self.f_funcs[i] = Ffunc(data.sigma_Bs[i], data.r_ins[i], data.r_outs[i])
         self.g_func = Gfunc()
 
         #This is the re from the light profile. It is a Gaussian with a FWHM of 2.35kpc from Tanio's paper. 
@@ -86,15 +84,15 @@ class ModelVelocity(object):
         for i, v in enumerate(vs):
             Ivs[i] = self.Iv_romb(v, k)
 
-        r_mean = 0.5*(self.r_ins[k]+self.r_outs[k])
+        r_mean = 0.5*(self.data.r_ins[k]+self.data.r_outs[k])
         initial_guess = [0.1, self.sigma(r_mean)]
         coeffs, _ = curve_fit(self._gauss, vs, Ivs, p0=initial_guess, check_finite=False)
         return coeffs[1]
     
     def model_sigmas(self, vmin=0, vmax=2000., dv=100.):
 
-        sigma_model = np.zeros(len(self.r_ins))
-        for k in range(len(self.r_ins)):
+        sigma_model = np.zeros(len(self.data.r_ins))
+        for k in range(len(self.data.r_ins)):
             sigma_model[k] = self.model_sigma(k, vmin, vmax, dv)
 
         return sigma_model
