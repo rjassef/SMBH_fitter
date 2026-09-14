@@ -4,13 +4,13 @@ import astropy.units as u
 
 class ReadData(object):
 
-    def __init__(self):
+    def __init__(self, fname="data.dat"):
 
         #Define the cosmology. 
         cosmo = FlatLambdaCDM(H0=70., Om0=0.3)
 
         #Read the measurements. 
-        data = np.loadtxt("data.dat", skiprows=1, usecols=[1,2,3,4,5,6,7])
+        data = np.loadtxt(fname, skiprows=1, usecols=[1,2,3,4,5,6,7])
         self.r_ins_ang = data[:,5]
         self.r_outs_ang = data[:,6]
         self.FWHM_Bs_ang = data[:,2]

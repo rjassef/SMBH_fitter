@@ -31,24 +31,43 @@ class ModelVelocity(object):
 
         return
     
-    def set_params(self, n, Mbulge, re_bulge, Mbh):
+    # def set_params(self, n, Mbulge, re_bulge, Mbh):
 
-        self.n = n
-        self.Mbulge = Mbulge
-        self.re_bulge = re_bulge
-        self.Mbh = Mbh
+    #     self.n = n
+    #     self.Mbulge = Mbulge
+    #     self.re_bulge = re_bulge
+    #     self.Mbh = Mbh
+    
+    #     #Get the convenience constant Ie
+    #     g_func_rnorm_max = self.g_func.rnorm_max
+    #     self.Ie_bulge = Mbulge/self.g_func.g_interp((n,g_func_rnorm_max))
+
+    #     return
+    def set_params(self, x):
+
+        #n, log_Mbulge, re_bulge, log_Mbh = x_use
+        self.n = x[0]
+        self.Mbulge = 10.**(x[1])
+        self.re_bulge = x[2]
+        self.Mbh = 10**(x[3])
     
         #Get the convenience constant Ie
         g_func_rnorm_max = self.g_func.rnorm_max
-        self.Ie_bulge = Mbulge/self.g_func.g_interp((n,g_func_rnorm_max))
+        self.Ie_bulge = self.Mbulge/self.g_func.g_interp((self.n,g_func_rnorm_max))
 
         return
 
-    def sigma(self, r):
+    def Mhost(self, r):
 
         rnorm = r/self.re_bulge
-        host_mass = self.Ie_bulge * self.g_func.g_interp((self.n, rnorm))
-        return self.K * ((self.Mbh+host_mass)/(r+1e-32))**0.5
+        return self.Ie_bulge * self.g_func.g_interp((self.n, rnorm))
+
+    def sigma(self, r):
+
+        # rnorm = r/self.re_bulge
+        # host_mass = self.Ie_bulge * self.g_func.g_interp((self.n, rnorm))
+        #return self.K * ((self.Mbh+host_mass)/(r+1e-32))**0.5
+        return self.K * ((self.Mbh+self.Mhost(r))/(r+1e-32))**0.5
 
     def Iv(self, v):
     

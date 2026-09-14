@@ -81,12 +81,15 @@ class MCMC(object):
 
         return
     
-    def corner_plot(self):
+    def corner_plot(self, labels=None):
+
+        if labels is None:
+            labels = self.labels
 
         labels_use = []
-        for i in range(len(self.labels)):
+        for i in range(len(labels)):
             if ~self.ifix[i]:
-                labels_use.append(self.labels[i])
+                labels_use.append(labels[i])
         
         flat_samples_use = self.flat_samples
 
@@ -119,15 +122,22 @@ class MCMC(object):
         # lp_bestfit = self.log_prob(x_use, self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix)
         # return x_use, lp_bestfit
     
-    def plot_bestfit(self):
+    def plot_bestfit(self, params_use=None):
 
         fig, ax = plt.subplots(1, figsize=(5,4))
 
-        ne, log_Mbulge, re_bulge, log_Mbh = self.best_fit()[0]
-        self.modelv.set_params(ne, 10.**log_Mbulge, re_bulge, 10.**log_Mbh)
+        #ne, log_Mbulge, re_bulge, log_Mbh = self.best_fit()[0]
+        #self.modelv.set_params(ne, 10.**log_Mbulge, re_bulge, 10.**log_Mbh)
+        if params_use is None:
+            params_use = self.best_fit()[0]
+            chi2 = self.best_fit()[-1] * -2
+        else:
+            lp = self.log_prob(params_use[~self.ifix], self.modelv, self.sigma_obs, self.sigma_obs_err, self.x_min, self.x_max, self.x_init, self.ifix)
+            chi2 = -2*lp
+        self.modelv.set_params(params_use)
 
-        chi2 = self.best_fit()[-1] * -2
-        chi2_nu = chi2/(len(self.sigma_obs)-(4-np.sum(self.ifix)))
+        #chi2 = self.best_fit()[-1] * -2
+        chi2_nu = chi2/(len(self.sigma_obs)-(len(params_use)-np.sum(self.ifix)))
 
         ax.set_title(r"Goodness of fit:   $\chi^2$ = {:.2f},   $\chi^2/{{\rm dof}}$ = {:.2f}".format(chi2, chi2_nu), transform=ax.transAxes)
 
