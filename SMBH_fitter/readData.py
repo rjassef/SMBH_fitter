@@ -10,7 +10,7 @@ class ReadData(object):
         cosmo = FlatLambdaCDM(H0=70., Om0=0.3)
 
         #Read the measurements. 
-        data = np.loadtxt(fname, skiprows=1, usecols=[1,2,3,4,5,6,7])
+        data = np.loadtxt(fname, skiprows=1, usecols=[1,2,3,4,5,6,7], ndmin=2)
         self.r_ins_ang = data[:,5]
         self.r_outs_ang = data[:,6]
         self.FWHM_Bs_ang = data[:,2]
