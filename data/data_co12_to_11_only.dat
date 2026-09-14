@@ -1,0 +1,6 @@
+central_rings	R_inner	R_outer	averge_beam_size sigma	sigma_err average_R_inner  average_R_outer
+robust_2minus	0.	    0.019	0.034	         400	60	   1.00E-32	0.017
+robust_0	    0.023	0.038	0.04	         327	38	   0.02	        0.033
+robust_0	    0.033	0.054	0.04	         298	40	   0.033	0.047
+robust_0.5	    0.054	0.079	0.058	         238	20	   0.047	0.067
+ 
