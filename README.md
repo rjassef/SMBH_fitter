@@ -47,9 +47,9 @@ in which $b_n$ is the traditional exponential coefficient of the Sérsic Profile
 
 ## Offset-host model
 
-The JWST/MIRI F560W observations of W2246-0526, imply a potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position, See these detailed discussions in Sections XXX and XXX in Liao et al. This model is designed to fit the outermost dispersion point to obtain the offset-host total mass for the case that the SMBH position is not same as the host center. 
+The JWST/MIRI F560W observations of W2246-0526, imply a potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position (see detailed discussions in Liao et al.). This model developed to fit the outermost dispersion point to obtain the offset-host total mass for the case that the SMBH position is not same as the host center. 
 
-Since the gravity potential would be highly asymmetric between the SMBH and the offset-host center, it would be very complex to build a model, including SMBH and host components, to do the full fitting for the whole dispersion profile. Instead, we simply assumed the outermost dispersion data point is dominated by the gravity from offset-host mass. When doing the fitting, we assumed its host model with following a Sérsic Profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc to match the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is left as a free parameter.
+The asymmetric potential induced by the SMBH–host offset substantially complicates full-profile dynamical fitting. To simplify the problem, we assume the outermost dispersion measurement is predominantly governed by the host galaxy’s gravitational potential. Instead, we simply assumed the outermost dispersion data point is dominated by the gravity from offset-host mass. When doing the fitting, we assumed its host model with following a Sérsic Profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc to match the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is left as a free parameter.
 
 Compared to the default dynamical model described above, the only different calculation of the offset-host model is the intrinsic dispersion contributed by the enclosed offset-host mass seen by $r$ (the radius from the SMBH position). In this case, the intrinsic velocity dispersion at a given distance from the center of offset-host mass distribution, $r_{\rm g}$, would be expressed as:
 
@@ -63,13 +63,12 @@ Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$
 
 So then we can replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and consider the smoothing effect of ALMA beam on the model, as well as the size of the integration regions (concentric elliptical rings), to calculate the model dispersion. 
 
-To speed up the calculations, we pre-compute below term with carrying out
-the angular integration in $\theta_1$:
+To speed up the calculations, we pre-compute the fully offset-dependent exponential term after azimuthal integration over $\theta_1$:
 
 $\exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]$,
 
 here, $M_{\rm Host}(<r) = M_{\rm Host}^{\rm Total}\ \frac{G(n, r/R_{\rm eff})}{G(n, r/R_{\infty})}$,
 
-in a large grid of $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in `ThetaIntegral`, which is initialized by the `ModelVelocity_offset_host` object.
+on a 5-dimensional grid spanning $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in `ThetaIntegral`, which is initialized by the `ModelVelocity_offset_host` object.
 
 
