@@ -8,7 +8,7 @@ class Gfunc(object):
 
         #The integral we have to do is in units of r/r_e. We'll scan from 0. to 5.
         #In n we'll go from n=0.5 to n=8. in units of 0.1.
-        ns = np.arange(0.5, 10.01, 0.1)
+        ns = np.arange(0.40, 10.01, 0.1)
         rnorms = np.arange(0., 50.01, 0.05)
         self.g_values = np.zeros((len(ns), len(rnorms)))
         for i, n in enumerate(ns):
