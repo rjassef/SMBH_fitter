@@ -63,8 +63,8 @@ Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$
 
 So then we can replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and consider the smoothing effect of ALMA beam on the model, as well as the size of the integration regions (concentric elliptical rings), to calculate the model dispersion. 
 
-To speed up the calculations, we pre-compute the XXXX in a large grid of XXX,XXXX, XXXX and then interpolate between them. This is implemented in the XXXX, which is initialized by the XXXX.
-
-
+To speed up the calculations, we pre-compute the term 
+$\exp\left[-\frac{v^2r_{\rm g}}{3G_{\rm N} M_{\rm Host}(<r_{\rm g})}\right]$ (here, $M_{\rm Host}(<r) = M_{\rm Host}^{\rm Total}\ \frac{G(n, r/R_{\rm eff})}{G(n, r/R_{\infty})}$)
+in a large grid of $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in `ThetaIntegral`, which is initialized by the `ModelVelocity_offset_host` object.
 
 
