@@ -47,13 +47,24 @@ in which $b_n$ is the traditional exponential coefficient of the Sérsic Profile
 
 ## Offset host model
 
-This model is for the potential offset (~ 1kpc) between the stellar center and the SMBH position, indicated by the JWST/MIRI F560W observations. See these detailed discussions in Sections XXX and XXX in Liao et al.
+This model is for the potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position, indicated by the JWST/MIRI F560W observations. See these detailed discussions in Sections XXX and XXX in Liao et al.
 
-In this case, since the gravity potential would be highly asymmetric between the SMBH and offset stellar center, it would be very complex to build a model to do the full fitting for the whole dispersion profile. Instead, we simply assumed the outermost [C II] dispersion data point is doFor a projected radius $r$ measured from the SMBH, the line-of-sight integral requires an additional azimuthal average over the host–SMBH geometry. 
+In this case, since the gravity potential would be highly asymmetric between the SMBH and offset stellar center, it would be very complex to build a model, including SMBH and host components, to do the full fitting for the whole dispersion profile. Instead, we simply assumed the outermost [C II] dispersion data point is dominated by the host stellar mass.
 
-At azimuth angle $\theta_1$, the physical radius measured from the host's mass center is
+For offset host model, the intrinsic velocity dispersionat a given distance from the center of stellar mass distribution, $r_{\rm g}$, would be expressed as:
 
-$r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2\,r\,r_{\rm offset}\cos\theta_1}$The intrinsic velocity dispersion contributed by the host galaxy at this shifted radius reads
+$\sigma_{\rm Host}(r_{\rm g}) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g})\big]}{r_{\rm g}}}$
 
-$\sigma_{\rm Host}(r,\theta_1) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g})\big]}{r_{\rm g}}}$The intrinsic line profile at projected radius $r$ is no longer a simple Gaussian in $v$; instead, the velocity-dependent exponential term must be azimuthally averaged over $\theta_1$,$I_{\rm int}(r,v) \propto I_R(r)\,\theta_{\rm int}(v, r, M_{\rm Host}^{\rm Total}, R_{\rm eff}, n)$with$\theta_{\rm int} = \frac{1}{2\pi}\int_0^{2\pi}\exp\left[-\frac{v^2\,r_{\rm g}}{3\,G_{\rm N}\big(M_{\rm BH}+M_{\rm Host}(<r_{\rm g})\big)}\right] d\theta_1$The Sérsic enclosed mass $M_{\rm Host}(<r_{\rm g})$ is evaluated at the offset radius $r_{\rm g}$ and uses the same $G(n, x)$ interpolation table as the non-offset model. The host stellar component follows a Sérsic profile with index $n_{\rm Host}$ and effective radius $R_e^{\rm Host}$, calibrated to match the JWST F560W morphology. The total host mass $M_{\rm Host}^{\rm Total}$ is treated as a free fitting parameter.The beam-convolution and ring-integration kernel $F(r, r_{\rm in}, r_{\rm out})$ (implemented in `Ffunc`) is unchanged; the offset modification enters only through $I_{\rm int}(r,v)$. We modify equations 4–7 from the base model to perform the angular integration over $\theta_1$ and compute the [CII] line velocity profile for each elliptical ring.To keep the evaluation fast, $\theta_{\rm int}$ is precomputed once on a regular 5-D grid $(v,\ r,\ \log M_{\rm Host}^{\rm Total},\ R_{\rm eff},\ n)$ and stored in a `RegularGridInterpolator`. During fitting, the lookup is vectorized over the radial integration grid, so no Python-level loop over $\theta_1$ or $r$ is required. This is implemented in `ThetaIntegral` (`Offset_model_theta_integral.py`) and wrapped by the `ModelVelocity_offset_host` class.
-0 commit commentsComments0 (0)Lock conversationComment
+Above equation can be further written at a given distance from the center of SMBH, 𝑟, as
+
+$\sigma_{\rm Host}(r, \theta_1) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g}[r, \theta_1])\big]}{r_{\rm g}[r, \theta_1]}}$
+
+Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$
+
+So then we can replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and consider the smoothing effect of ALMA beam on the model, as well as the size of the integration regions (concentric elliptical rings), to calculate the model dispersion. 
+
+To speed up the calculations, we pre-compute the XXXX in a large grid of XXX,XXXX, XXXX and then interpolate between them. This is implemented in the XXXX, which is initialized by the XXXX.
+
+This model is assumed to follow a Sérsic Profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc to match the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is left as a free parameter.
+
+
