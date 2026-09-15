@@ -47,9 +47,11 @@ in which $b_n$ is the traditional exponential coefficient of the Sérsic Profile
 
 ## Offset host model
 
-This model is for fitting for the outermost dispersion point to obtain the host total mass, motivated by that the potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position, indicated by the JWST/MIRI F560W observations. See these detailed discussions in Sections XXX and XXX in Liao et al.
+The JWST/MIRI F560W observations of W2246-0526, imply a potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position, See these detailed discussions in Sections XXX and XXX in Liao et al. This model is designed to fit the outermost dispersion point to obtain the host total mass for the case that the SMBH position is not same as the host center. 
 
-In this case, since the gravity potential would be highly asymmetric between the SMBH and offset stellar center, it would be very complex to build a model, including SMBH and host components, to do the full fitting for the whole dispersion profile. Instead, we simply assumed the outermost dispersion data point is dominated by the gravity from host mass. When doing the fitting, we assumed the host model with following a Sérsic Profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc to match the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is left as a free parameter.
+Since the gravity potential would be highly asymmetric between the SMBH and offset stellar center in the offset host case, it would be very complex to build a model, including SMBH and host components, to do the full fitting for the whole dispersion profile. Instead, we simply assumed the outermost dispersion data point is dominated by the gravity from host mass. When doing the fitting, we assumed the host model with following a Sérsic Profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc to match the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is left as a free parameter.
+
+Compared to the default dynamical model described above, the only different calculation is the expression of the intrinsic dispersion contributed by the enclosed host mass seen by $r$ (the radius from the SMBH position).
 
 For offset host model, the intrinsic velocity dispersionat a given distance from the center of stellar mass distribution, $r_{\rm g}$, would be expressed as:
 
