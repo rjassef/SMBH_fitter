@@ -53,18 +53,23 @@ Since the gravity potential would be highly asymmetric between the SMBH and the 
 
 Compared to the default dynamical model described above, the only different calculation of the offset-host model is the intrinsic dispersion contributed by the enclosed offset-host mass seen by $r$ (the radius from the SMBH position). In this case, the intrinsic velocity dispersion at a given distance from the center of offset-host mass distribution, $r_{\rm g}$, would be expressed as:
 
-$\sigma_{\rm Host}(r_{\rm g}) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g})\big]}{r_{\rm g}}}$
+$\sigma_{\rm Host}(r_{\rm g}) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g})\big]}{r_{\rm g}}}$,
 
 Above equation can be further written at a given distance from the center of SMBH, 𝑟, as
 
-$\sigma_{\rm Host}(r, \theta_1) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g}[r, \theta_1])\big]}{r_{\rm g}[r, \theta_1]}}$
+$\sigma_{\rm Host}(r, \theta_1) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g}[r, \theta_1])\big]}{r_{\rm g}[r, \theta_1]}}$,
 
-Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$
+Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$,
 
 So then we can replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and consider the smoothing effect of ALMA beam on the model, as well as the size of the integration regions (concentric elliptical rings), to calculate the model dispersion. 
 
-To speed up the calculations, we pre-compute the term 
-$\exp\left[-\frac{v^2r_{\rm g}}{3G_{\rm N} M_{\rm Host}(<r_{\rm g})}\right]$ (here, $M_{\rm Host}(<r) = M_{\rm Host}^{\rm Total}\ \frac{G(n, r/R_{\rm eff})}{G(n, r/R_{\infty})}$)
+To speed up the calculations, we pre-compute the term with carrying out
+the angular integration in $\theta_1$:
+
+$\exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]$,
+
+here, $M_{\rm Host}(<r) = M_{\rm Host}^{\rm Total}\ \frac{G(n, r/R_{\rm eff})}{G(n, r/R_{\infty})}$,
+
 in a large grid of $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in `ThetaIntegral`, which is initialized by the `ModelVelocity_offset_host` object.
 
 
