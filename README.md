@@ -47,7 +47,7 @@ in which $b_n$ is the traditional exponential coefficient of the Sérsic Profile
 
 ## Offset-host model
 
-The JWST/MIRI F560W observations of W2246-0526, imply a potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position (see detailed discussions in Liao et al.). This model is developed to fit the outermost dispersion point to obtain the offset-host total mass for the case that the SMBH position is not same as the host center. 
+The JWST/MIRI F560W observations of W2246-0526, imply a potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position (see detailed discussions in the Section 4 and Section 13.2 of Liao et al.). This model is developed to fit the outermost dispersion point to obtain the offset-host total mass for the case that the SMBH position is not same as the host center. 
 
 The asymmetric potential induced by the SMBH–host offset substantially complicates full-profile dynamical fitting. To simplify the problem, we assume the outermost dispersion measurement is predominantly governed by the host galaxy’s gravitational potential. When doing the fitting, we assumed its host model with following a Sérsic Profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc to match the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is left as a free parameter.
 
