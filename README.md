@@ -47,21 +47,21 @@ in which $b_n$ is the traditional exponential coefficient of the Sérsic Profile
 
 ## Offset-host model
 
-The JWST/MIRI F560W observations of W2246-0526, imply a potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position (see detailed discussions in the Section 4 and Section 13.2 of Liao et al.). This model is developed to fit the outermost dispersion point to obtain the offset-host total mass for the case that the SMBH position is not same as the host center. 
+The JWST/MIRI F560W observations of W2246-0526, imply a potential offset ($r_{\rm offset}$ = 1kpc) between the stellar center and the SMBH position (see detailed discussions in the Section 4 and Section 13.2 of Liao et al.). Here (see also Section 13.2 of Liao et al.) we describe a host galaxy model that takes this offset into account. Due to the asymmetric potential induced by the SMBH–host offset, it is not possible to simultaneously fit for the SMBH and host mass. Instead, we use this model only to determine the host mass by fitting it to the outermost dispersion point, where the contribution from the SMBH gravity should be minimal.
 
-The asymmetric potential induced by the SMBH–host offset substantially complicates full-profile dynamical fitting. To simplify the problem, we assume the outermost dispersion measurement is predominantly governed by the host galaxy’s gravitational potential. When doing the fitting, we assumed its host model with following a Sérsic Profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc to match the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is left as a free parameter.
+We assume the host mass distribution follows a Sérsic profile with $n$ = 1.64 and $R_{e}^{\rm Host}$ = 1.5 kpc, matching the morphology of the JWST F560W imaging. Its total mass $M_{\rm Host}^{\rm Total}$ is the only free parameter.
 
-Compared to the default dynamical model described above, the only different calculation of the offset-host model is the intrinsic dispersion contributed by the enclosed offset-host mass seen by $r$ (the radius from the SMBH position). In this case, the intrinsic velocity dispersion at a given distance from the center of offset-host mass distribution, $r_{\rm g}$, would be expressed as:
+As before, the velocity dispersion at a distance $r_{\rm g}$ from the center of the stellar mass distribution is given by 
 
 $\sigma_{\rm Host}(r_{\rm g}) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g})\big]}{r_{\rm g}}}$,
 
-Above equation can be further written at a given distance from the center of SMBH, 𝑟, as
+This equation can further be written at a given distance from the center of SMBH, $r$, as
 
 $\sigma_{\rm Host}(r, \theta_1) = \sqrt{\frac{2}{3}\frac{G_{\rm N}\big[M_{\rm Host}(<r_{\rm g}[r, \theta_1])\big]}{r_{\rm g}[r, \theta_1]}}$,
 
 Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$,
 
-So then we can replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and consider the smoothing effect of ALMA beam on the model, as well as the size of the integration regions (concentric elliptical rings), to calculate the model dispersion. 
+We then replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and calculate the model dispersion for each of the concentric rings centered on the SMBH, including the beam smearing effects.
 
 To speed up the calculations, we pre-compute the fully offset-dependent exponential term after azimuthal integration over $\theta_1$:
 
