@@ -65,12 +65,10 @@ We then replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the de
 
 $I_{\rm int}(r,v,\theta_1) \propto I_R(r)\ \exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}$,
 
-where, $\exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}$ = $\exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]$
+where, the fully offset-dependent exponential term $\exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}$ = $\exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]$
 
 
-To speed up the calculations, we pre-compute the fully offset-dependent exponential term after azimuthal integration over $\theta_1$:
-
-$\exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]$,
+To speed up the calculations, we pre-compute this term after azimuthal integration over $\theta_1$.
 
 here, $M_{\rm Host}(<r) = M_{\rm Host}^{\rm Total}\ \frac{G(n, r/R_{\rm eff})}{G(n, r/R_{\infty})}$,
 
