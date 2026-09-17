@@ -68,10 +68,6 @@ $I_{\rm int}(r,v,\theta_1) \propto I_R(r)\ \exp{-\frac{1}{2}\left(\frac{v}{\sigm
 where, the fully offset-dependent exponential term $\exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}$ = $\exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]$
 
 
-To speed up the calculations, we pre-compute this term after azimuthal integration over $\theta_1$.
-
-here, $M_{\rm Host}(<r) = M_{\rm Host}^{\rm Total}\ \frac{G(n, r/R_{\rm eff})}{G(n, r/R_{\infty})}$,
-
-on a 5-dimensional grid spanning $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in `ThetaIntegral`, which is initialized by the `ModelVelocity_offset_host` object.
+To speed up the calculations, we pre-compute this term after azimuthal integration over $\theta_1$, on a 5-dimensional grid spanning $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in `ThetaIntegral`, which is initialized by the `ModelVelocity_offset_host` object.
 
 
