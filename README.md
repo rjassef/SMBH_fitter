@@ -63,7 +63,7 @@ Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$
 
 We then replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and calculate the model dispersion for each of the concentric rings centered on the SMBH, including the beam smearing effects. Therefore in this case, the intrinsic line intensity velocity profile is given by:
 
-$I_{\rm int}(r,v,\theta_1) \propto I_R(r)\ \exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r_{\rm g}}\right)^2}$,
+$I_{\rm int}(r,v,\theta_1) \propto I_R(r)\ \exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}$,
 
 
 To speed up the calculations, we pre-compute the fully offset-dependent exponential term after azimuthal integration over $\theta_1$:
