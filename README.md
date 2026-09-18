@@ -27,7 +27,7 @@ where
 
 $F(r, r_{\rm in}, r_{\rm out}) = \int_{r_{\rm in}}^{r_{\rm out}} \exp{\left\\{-\frac{1}{2}\left(\frac{r_0^2+r^2}{\sigma_{\rm Beam}^2}\right)\right\\}}\ \mathcal{I}_0\left(\frac{r_0 r}{\sigma_B^2}\right)\ r_0\ dr_0$
 
-To speed up the calculation, we pre-compute $F$ in a grid of $r$ for each combination of $r_{\rm in}$ and $r_{\rm out}$, and then interpolate in $r$. This is implemented by the [Ffunc](fFunc.py) object, which is initialized by the [ModelVelocity](modelVelocity.py) object. 
+To speed up the calculation, we pre-compute $F$ in a grid of $r$ for each combination of $r_{\rm in}$ and $r_{\rm out}$, and then interpolate in $r$. This is implemented by the [Ffunc](SMBH_fitter/fFunc.py) object, which is initialized by the [ModelVelocity](SMBH_fitter/modelVelocity.py) object. 
 
 We assume that 
 
@@ -43,7 +43,7 @@ where $M_{\rm Host}^{\rm Total}$ is the total mass of the host component we cons
 
 $G(n, x) = \int_0^x e^{-b_n x^{1/n}} x dx$, 
 
-in which $b_n$ is the traditional exponential coefficient of the Sérsic Profile. To speed up the calculations, we pre-compute the G function in a large grid of $n$ and $r/R_{\rm eff}$ and then interpolate between them. This is implemented in the [Gfunc](gFunc.py) object, which is initialized by the [ModelVelocity](modelVelocity.py) object. 
+in which $b_n$ is the traditional exponential coefficient of the Sérsic Profile. To speed up the calculations, we pre-compute the G function in a large grid of $n$ and $r/R_{\rm eff}$ and then interpolate between them. This is implemented in the [Gfunc](SMBH_fitter/gFunc.py) object, which is initialized by the [ModelVelocity](SMBH_fitter/modelVelocity.py) object. 
 
 ## Offset-host model
 
@@ -63,11 +63,16 @@ Here, $r_{\rm g} = \sqrt{r^2 + r_{\rm offset}^2 - 2rr_{\rm offset}\cos\theta_1}$
 
 We then replace the $\sigma_{r}$ with $\sigma_{\rm Host}(r, \theta_1)$ in the default model described above, and calculate the model dispersion for each of the concentric rings centered on the SMBH, including the beam smearing effects. Therefore in this case, the intrinsic line intensity velocity profile is given by:
 
-$I_{\rm int}(r,v,\theta_1) \propto I_R(r)\ \exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}$,
+$I_{\rm int}(r,v) \propto I_R(r)\ \int \exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}\ d\theta_1$,
 
-where, the fully offset-dependent exponential term $\exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}$ = $\exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]$
+which for convenience we can write as 
 
+$I_{\rm int}(r,v) \propto I_R(r)\ \Theta(v, r)$,
 
-To speed up the calculations, we pre-compute this term after azimuthal integration over $\theta_1$, on a 5-dimensional grid spanning $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in `ThetaIntegral`, which is initialized by the `ModelVelocity_offset_host` object.
+with 
+
+$\Theta(v, r) = \int \exp{-\frac{1}{2}\left(\frac{v}{\sigma_{\rm Host}(r, \theta_1)}\right)^2}\ d\theta_1 = \int \exp\left[-\frac{v^2r_{\rm g} [r, \theta_1]}{3G_{\rm N} M_{\rm Host}(<r_{\rm g} [r, \theta_1])}\right]\ d\theta_1$.
+
+To speed up the calculations, we pre-compute the $\Theta$ function on a 5-dimensional grid spanning $v$, $r$, $\log M_{\rm Host}^{\rm Total}$, $R_{\rm eff}$, and $n$, and then interpolate between them. This is implemented in the [ThetaIntegral](SMBH_fitter/offset_model_theta_integral.py) object, which is initialized by the [ModelVelocity_offset_host](SMBH_fitter/modelVelocity_host_offset.py) object.
 
 
